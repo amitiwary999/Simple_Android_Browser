@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_home"
+        icon="@drawable/ic_home_white_24dp"
+        title="Home"
+        barColorWhenSelected="#5D4037"/>
+    <tab
+        id="@+id/tab_news"
+        icon="@drawable/ic_news_white_24dp"
+        title="News"
+        barColorWhenSelected="#5D4037"/>
+    <tab
+        id="@+id/tab_repo"
+        icon="@drawable/ic_repo_white_24dp"
+        title="Repo"
+        barColorWhenSelected="#5D4037"/>
+</tabs>
