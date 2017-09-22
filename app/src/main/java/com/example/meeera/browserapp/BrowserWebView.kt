@@ -15,6 +15,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import com.example.meeera.browserapp.View.CastomWebView
 import com.example.meeera.browserapp.View.CustomWebView
 import kotlinx.android.synthetic.main.activity_webview.*
 
@@ -23,15 +24,15 @@ import kotlinx.android.synthetic.main.activity_webview.*
  */
 @SuppressLint("SetJavaScriptEnabled")
 class BrowserWebView : AppCompatActivity() {
-    var webView : CustomWebView ?= null
+    var webView : CastomWebView?= null
     var currentUrl : String ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.window.requestFeature(Window.FEATURE_PROGRESS)
-        setContentView(R.layout.activity_webview)
+        setContentView(R.layout.activity_web1_view)
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
-        webView = findViewById(R.id.webView) as? CustomWebView
+        webView = findViewById(R.id.webView) as? CastomWebView
         webView?.settings?.javaScriptEnabled = true //enables javascript in our browser
         webView?.settings?.useWideViewPort = true //web page completely zoomed down
         webView?.settings?.setAppCacheMaxSize(8*1024*1024) // 8 MB for cache
@@ -41,9 +42,14 @@ class BrowserWebView : AppCompatActivity() {
         webView?.settings?.cacheMode = WebSettings.LOAD_DEFAULT
 
         //overrides a method so that a link in any web page does not load up in default browser
-        webView?.setWebViewClient(ViewClient())
+      //  webView?.setWebViewClient(ViewClient())
         webView?.setWebViewClient(object : WebViewClient() {
             internal var willSave = true
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                view?.loadUrl(url.toString())
+                return true
+            }
 
             override fun onPageFinished(view: WebView, url: String) {
                 // TODO Auto-generated method stub
@@ -102,25 +108,6 @@ class BrowserWebView : AppCompatActivity() {
     }
 
     fun browserWork(bundle : Bundle) {
-        if (bundle == null) {
-            //will load google search page as the default page
-            try {
-                webView?.loadUrl("https://www.google.com")
-                currentUrl = webView?.getUrl()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        } else {
-            // will get the address from bundle
-            try {
-                webView?.loadUrl(bundle.getString("link"))
-                currentUrl = webView?.getUrl()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
 
         val MyActivity = this
         webView?.setWebChromeClient(object : WebChromeClient() {
@@ -136,10 +123,31 @@ class BrowserWebView : AppCompatActivity() {
 
                 // get current url as the web page loads  and set the url in the edit text
                 currentUrl = webView?.getUrl()
-               // url.setText(currentUrl)
+                // url.setText(currentUrl)
 
             }
         })
+
+        if (bundle == null) {
+            //will load google search page as the default page
+            try {
+                webView?.loadUrl("https://www.google.com")
+                currentUrl = webView?.getUrl()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        } else {
+            // will get the address from bundle
+            try {
+                webView?.loadUrl(bundle.getString("link"))
+                currentUrl = webView?.getUrl()
+                Toast.makeText(this, bundle.getString("link"), Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
     }
 
     override fun onPause() {

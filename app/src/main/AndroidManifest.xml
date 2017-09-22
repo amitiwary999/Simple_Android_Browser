@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".BrowserWebView"/>
+        <activity android:name=".BrawserWebView"/>
     </application>
 
 </manifest>
