@@ -42,10 +42,10 @@ public class CastomWebView extends WebView {
         this.onScrollChangedCallback = onScrollChangedCallback;
     }
 
-    @Override
+   /* @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return gestureDetector.onTouchEvent(ev) || super.onTouchEvent(ev);
-    }
+    }*/
 
     public void setGestureDetector(GestureDetector gestureDetector) {
         this.gestureDetector = gestureDetector;

@@ -131,7 +131,7 @@ class BrowserWebView : AppCompatActivity() {
         if (bundle == null) {
             //will load google search page as the default page
             try {
-                webView?.loadUrl("https://www.google.com")
+                webView?.loadUrl("https://www.amazon.com")
                 currentUrl = webView?.getUrl()
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -127,13 +127,19 @@ public class BrawserWebView extends AppCompatActivity{
             webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ONLY);
         }
 
-        Bundle bundle=getIntent().getExtras();
+        //Bundle bundle=getIntent().getExtras();
 
-        browserWork(bundle);
+        browserWork();
     }
 
-    private void browserWork(Bundle bundle) {
-        if(bundle==null) {
+    private void browserWork() {
+        try {
+            webView.loadUrl("https://www.amazon.com");
+            //currentUrl=webView.getUrl();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        /*if(bundle==null) {
             //will load google search page as the default page
             try {
                 webView.loadUrl("https://www.google.com");
@@ -149,7 +155,7 @@ public class BrawserWebView extends AppCompatActivity{
             } catch(Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         /*
          * set ChromeClient, and defines on ProgressChanged
