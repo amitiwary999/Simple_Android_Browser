@@ -2,6 +2,7 @@ package com.example.meeera.browserapp
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -17,7 +18,13 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import com.example.meeera.browserapp.View.CastomWebView
 import com.example.meeera.browserapp.View.CustomWebView
+import kotlinx.android.synthetic.main.activity_web1_view.*
 import kotlinx.android.synthetic.main.activity_webview.*
+import android.support.annotation.IdRes
+import com.roughike.bottombar.OnTabSelectListener
+import com.example.meeera.browserapp.R.id.bottomBar
+
+
 
 /**
  * Created by meeera on 22/9/17.
@@ -26,7 +33,7 @@ import kotlinx.android.synthetic.main.activity_webview.*
 class BrowserWebView : AppCompatActivity() {
     var webView : CastomWebView?= null
     var currentUrl : String ?= null
-
+    var bundle : Bundle ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.window.requestFeature(Window.FEATURE_PROGRESS)
@@ -78,6 +85,47 @@ class BrowserWebView : AppCompatActivity() {
 
         })
 
+        bottomBar.setOnTabSelectListener { tabId ->
+            var intent = Intent(this, MainActivity::class.java)
+            when(tabId) {
+                R.id.tab_back ->
+                    if (webView?.canGoBack().toString().toBoolean()) {
+                        webView?.goBack()
+                    }
+
+                R.id.tab_forward ->
+                    if (webView?.canGoForward().toString().toBoolean()) {
+                        webView?.goForward()
+                    }
+
+                R.id.tab_home -> {
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
+
+        bottomBar.setOnTabReselectListener { tabId ->
+            var intent = Intent(this, MainActivity::class.java)
+            when(tabId) {
+                R.id.tab_back ->
+                    if (webView?.canGoBack().toString().toBoolean()) {
+                        webView?.goBack()
+                    }
+
+                R.id.tab_forward ->
+                    if (webView?.canGoForward().toString().toBoolean()) {
+                        webView?.goForward()
+                    }
+
+                R.id.tab_home -> {
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        }
         // disable the navigation bar while scrolling
         /*webView?.setOnScrollChangedCallback(object : CustomWebView.OnScrollChangedCallback {
             fun onScroll(l: Int, t: Int) {
@@ -103,11 +151,11 @@ class BrowserWebView : AppCompatActivity() {
             webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
         }
 
-        val bundle = intent.extras
+        bundle = intent.extras
         browserWork(bundle)
     }
 
-    fun browserWork(bundle : Bundle) {
+    fun browserWork(bundle : Bundle?) {
 
         val MyActivity = this
         webView?.setWebChromeClient(object : WebChromeClient() {
@@ -131,7 +179,7 @@ class BrowserWebView : AppCompatActivity() {
         if (bundle == null) {
             //will load google search page as the default page
             try {
-                webView?.loadUrl("https://www.amazon.com")
+                webView?.loadUrl("https://www.google.com")
                 currentUrl = webView?.getUrl()
             } catch (e: Exception) {
                 e.printStackTrace()
