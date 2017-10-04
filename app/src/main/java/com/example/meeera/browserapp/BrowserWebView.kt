@@ -31,7 +31,7 @@ import com.example.meeera.browserapp.R.id.bottomBar
  */
 @SuppressLint("SetJavaScriptEnabled")
 class BrowserWebView : AppCompatActivity() {
-    var webView : CastomWebView?= null
+    var webView : WebView?= null
     var currentUrl : String ?= null
     var bundle : Bundle ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +102,10 @@ class BrowserWebView : AppCompatActivity() {
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
                     finish()
+                }
+
+                R.id.tab_option -> {
+
                 }
             }
         }
