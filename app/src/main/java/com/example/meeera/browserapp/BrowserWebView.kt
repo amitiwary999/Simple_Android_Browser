@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.GestureDetector
@@ -21,19 +22,23 @@ import com.example.meeera.browserapp.View.CustomWebView
 import kotlinx.android.synthetic.main.activity_web1_view.*
 import kotlinx.android.synthetic.main.activity_webview.*
 import android.support.annotation.IdRes
+import android.widget.PopupMenu
+import com.example.meeera.browserapp.Model.HistoryModel
 import com.roughike.bottombar.OnTabSelectListener
 import com.example.meeera.browserapp.R.id.bottomBar
-
+import io.realm.Realm
+import io.realm.RealmResults
 
 
 /**
  * Created by meeera on 22/9/17.
  */
 @SuppressLint("SetJavaScriptEnabled")
-class BrowserWebView : AppCompatActivity() {
+class BrowserWebView() : AppCompatActivity() {
     var webView : WebView?= null
     var currentUrl : String ?= null
     var bundle : Bundle ?= null
+    var realm: Realm = Realm.getDefaultInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.window.requestFeature(Window.FEATURE_PROGRESS)
@@ -62,18 +67,26 @@ class BrowserWebView : AppCompatActivity() {
                 // TODO Auto-generated method stub
                 super.onPageFinished(view, url)
                 // add to history when page has finished loading and page has loaded successfully
-               // addToHistory()
+                addToHistory()
                 //webViewBitmap[0] = createWebViewToBitmap()
             }
 
-            /*private fun addToHistory() {
+            private fun addToHistory() {
                 // TODO Auto-generated method stub
+                val id = PreferenceManager.getDefaultSharedPreferences(applicationContext).getLong("count", 0)
                 if (willSave == true) {
-                    val h = History(webView.getUrl())
-                    hHandler.addHistory(h)
-                    Log.d("SimpleBrowser : ", "Added to history" + h.toString())
+                    realm.executeTransactionAsync( { bgRealm ->
+                        val history = bgRealm.createObject(HistoryModel::class.java)
+                        history.setHistoryData(webView?.url.toString())
+                        realm.commitTransaction()
+
+                    })
                 }
-            }*/
+            }
+
+            public fun getHistory() : RealmResults<HistoryModel>{
+                return realm.where(HistoryModel::class.java).findAll()
+            }
 
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
                 // TODO Auto-generated method stub
@@ -105,7 +118,17 @@ class BrowserWebView : AppCompatActivity() {
                 }
 
                 R.id.tab_option -> {
+                    var menu : PopupMenu ?= PopupMenu(this, findViewById(R.id.tab_option))
+                    menu?.menuInflater?.inflate(R.menu.options, menu.menu)
+                    menu?.setOnMenuItemClickListener { item ->
+                        if (item.title.equals("History")) {
+                            val intent = Intent(this, HistoryActivity::class.java)
+                            startActivity(intent)
+                        } else if (item.title.equals("Bookmarks")) {
 
+                        }
+                        return@setOnMenuItemClickListener false
+                    }
                 }
             }
         }
