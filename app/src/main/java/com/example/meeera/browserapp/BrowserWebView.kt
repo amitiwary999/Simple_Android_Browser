@@ -174,15 +174,15 @@ class BrowserWebView() : AppCompatActivity() {
             webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
         }
 
-        //bundle = intent.extras
-        browserWork()
+        bundle = intent.extras
+        browserWork(bundle)
     }
 
-    public fun getHistory(realm : Realm) : OrderedRealmCollection<HistoryModel> {
+    fun getHistory(realm : Realm) : OrderedRealmCollection<HistoryModel> {
         return realm.where(HistoryModel::class.java).findAll()
     }
 
-    fun browserWork(/*bundle : Bundle?*/) {
+    fun browserWork(bundle : Bundle?) {
 
         val MyActivity = this
         webView?.setWebChromeClient(object : WebChromeClient() {
@@ -215,9 +215,9 @@ class BrowserWebView() : AppCompatActivity() {
         } else {
             // will get the address from bundle
             try {
-                //webView?.loadUrl(bundle.getString("link"))
-                //currentUrl = webView?.getUrl()
-                //Toast.makeText(this, bundle.getString("link"), Toast.LENGTH_SHORT).show()
+                webView?.loadUrl(bundle.getString("link"))
+                currentUrl = webView?.getUrl()
+                Toast.makeText(this, bundle.getString("link"), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
