@@ -29,7 +29,7 @@ class HistoryAdapter(var context : Context, var hisdata : OrderedRealmCollection
 
     override fun getItemCount(): Int {
 
-        return (data?.size)!!.toInt()+1
+        return (data?.size)!!.toInt()
     }
 
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {

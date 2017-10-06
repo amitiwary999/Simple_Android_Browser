@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_web1_view.*
 import android.widget.PopupMenu
 import com.example.meeera.browserapp.Model.HistoryModel
 import com.example.meeera.browserapp.Model.HistryModel
+import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmResults
 import kotlin.properties.Delegates
@@ -80,10 +81,6 @@ class BrowserWebView() : AppCompatActivity() {
                     }
                    // realm.commitTransaction()
                 }
-            }
-
-            public fun getHistory() : RealmResults<HistryModel>{
-                return realm.where(HistryModel::class.java).findAll()
             }
 
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
@@ -179,6 +176,10 @@ class BrowserWebView() : AppCompatActivity() {
 
         //bundle = intent.extras
         browserWork()
+    }
+
+    public fun getHistory(realm : Realm) : OrderedRealmCollection<HistoryModel> {
+        return realm.where(HistoryModel::class.java).findAll()
     }
 
     fun browserWork(/*bundle : Bundle?*/) {
