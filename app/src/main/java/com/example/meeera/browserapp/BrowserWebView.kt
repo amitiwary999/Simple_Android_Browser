@@ -14,16 +14,16 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
-import com.example.meeera.browserapp.View.CastomWebView
 import kotlinx.android.synthetic.main.activity_web1_view.*
 import android.widget.PopupMenu
 import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.Model.HistoryModel
-import com.example.meeera.browserapp.Model.HistryModel
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmResults
 import kotlin.properties.Delegates
+
+
 
 
 /**
@@ -71,16 +71,11 @@ class BrowserWebView() : AppCompatActivity() {
 
             private fun addToHistory(realm : Realm) {
                 // TODO Auto-generated method stub
-                val id = PreferenceManager.getDefaultSharedPreferences(applicationContext).getLong("count", 0)
                 if (willSave == true) {
-                    //realm.beginTransaction()
                     realm.executeTransaction{
                         val history = realm.createObject(HistoryModel::class.java)
-                        //history.history = webView?.url.toString()
                         history.setHistory(webView?.url.toString())
-                        //realm.commitTransaction()
                     }
-                   // realm.commitTransaction()
                 }
             }
 
@@ -89,7 +84,6 @@ class BrowserWebView() : AppCompatActivity() {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.d("SimpleBrowser : ", "Failed to load page")
                 willSave = false
-                //addToHistory()
             }
 
         })
@@ -124,10 +118,21 @@ class BrowserWebView() : AppCompatActivity() {
                             val intent = Intent(this, BookMarkActivity::class.java)
                             startActivity(intent)
                         } else if (item.title.equals("Add Bookmark")) {
-                            realm.executeTransaction {
-                                val bookmark = realm.createObject(BookmarkModel::class.java)
-                                bookmark.setBookMark(webView?.url.toString())
+                            var flag : Boolean = false
+                            val bookmark = realm.where(BookmarkModel::class.java).findAll()
+                            for(model in bookmark) {
+                                if(model.getBookMark().equals(webView?.url.toString())) {
+                                    flag = true
+                                    break
+                                }
+                                flag = false
                             }
+                                realm.executeTransaction {
+                                    if(!flag) {
+                                        val bookmark = realm.createObject(BookmarkModel::class.java)
+                                        bookmark.setBookMark(webView?.url.toString())
+                                    }
+                                }
                         }
                         return@setOnMenuItemClickListener true
                     }
@@ -166,10 +171,20 @@ class BrowserWebView() : AppCompatActivity() {
                             val intent = Intent(this, BookMarkActivity::class.java)
                             startActivity(intent)
                         } else if (item.title.equals("Add Bookmark")) {
+                            var flag : Boolean = false
+                            val bookmark = realm.where(BookmarkModel::class.java).findAll()
+                            for(model in bookmark) {
+                                if(model.getBookMark().equals(webView?.url.toString())) {
+                                    flag = true
+                                    break
+                                }
+                                flag = false
+                            }
                             realm.executeTransaction {
-                                Toast.makeText(this, webView?.url.toString(), Toast.LENGTH_SHORT).show()
-                                val bookmark = realm.createObject(BookmarkModel::class.java)
-                                bookmark.setBookMark(webView?.url.toString())
+                                if(!flag) {
+                                    val bookmark = realm.createObject(BookmarkModel::class.java)
+                                    bookmark.setBookMark(webView?.url.toString())
+                                }
                             }
                         }
                         return@setOnMenuItemClickListener true
@@ -178,21 +193,6 @@ class BrowserWebView() : AppCompatActivity() {
                 }
             }
         }
-        // disable the navigation bar while scrolling
-        /*webView?.setOnScrollChangedCallback(object : CustomWebView.OnScrollChangedCallback {
-            fun onScroll(l: Int, t: Int) {
-                disableNavigationBar()
-            }
-        })
-
-        // enable the navigation bar when a tap is detected on webview
-        webView?.setOnTouchListener(View.OnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                enableNavigationBar()
-            }
-            false
-        })
-        webView?.setGestureDetector(GestureDetector(CustomeGestureDetector()))*/
 
         /*
          * Check if network is available
@@ -249,7 +249,6 @@ class BrowserWebView() : AppCompatActivity() {
             try {
                 webView?.loadUrl(bundle.getString("link"))
                 currentUrl = webView?.getUrl()
-                Toast.makeText(this, bundle.getString("link"), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
