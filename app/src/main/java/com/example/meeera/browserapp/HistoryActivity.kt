@@ -19,7 +19,9 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.onItemClicked {
     override fun onItemClick(position: String?) {
         val intent = Intent(this, BrowserWebView::class.java)
         intent.putExtra("link", position.toString())
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
         startActivity(intent)
+        finish()
     }
 
     var realm: Realm by Delegates.notNull()

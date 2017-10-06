@@ -147,6 +147,21 @@ class BrowserWebView() : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
+
+                R.id.tab_option -> {
+                    var menu : PopupMenu ?= PopupMenu(this, findViewById(R.id.tab_option))
+                    menu?.menuInflater?.inflate(R.menu.options, menu.menu)
+                    menu?.setOnMenuItemClickListener { item ->
+                        if (item.title.equals("History")) {
+                            val intent = Intent(this, HistoryActivity::class.java)
+                            startActivity(intent)
+                        } else if (item.title.equals("Bookmarks")) {
+
+                        }
+                        return@setOnMenuItemClickListener true
+                    }
+                    menu?.show()
+                }
             }
         }
         // disable the navigation bar while scrolling
