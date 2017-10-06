@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item
-    android:id="@+id/bookmark"
-    android:title="Bookmarks"/>
+    <item
+        android:id="@+id/addbookmark"
+        android:title="Add Bookmarks" />
 
-<item
-    android:id="@+id/history"
-    android:title="History"/>
+    <item
+        android:id="@+id/bookmark"
+        android:title="Bookmarks" />
+
+    <item
+        android:id="@+id/history"
+        android:title="History" />
 </menu>
