@@ -23,6 +23,7 @@
         <!--<activity android:name=".BrawserWebView"/>!-->
         <activity android:name=".BrowserWebView"/>
         <activity android:name=".HistoryActivity"/>
+        <activity android:name=".BookMarkActivity"/>
     </application>
 
 </manifest>

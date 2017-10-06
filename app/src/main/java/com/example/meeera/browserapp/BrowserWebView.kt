@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.example.meeera.browserapp.View.CastomWebView
 import kotlinx.android.synthetic.main.activity_web1_view.*
 import android.widget.PopupMenu
+import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.Model.HistoryModel
 import com.example.meeera.browserapp.Model.HistryModel
 import io.realm.OrderedRealmCollection
@@ -120,7 +121,13 @@ class BrowserWebView() : AppCompatActivity() {
                             val intent = Intent(this, HistoryActivity::class.java)
                             startActivity(intent)
                         } else if (item.title.equals("Bookmarks")) {
-
+                            val intent = Intent(this, BookMarkActivity::class.java)
+                            startActivity(intent)
+                        } else if (item.title.equals("Add Bookmark")) {
+                            realm.executeTransaction {
+                                val bookmark = realm.createObject(BookmarkModel::class.java)
+                                bookmark.setBookMark(webView?.url.toString())
+                            }
                         }
                         return@setOnMenuItemClickListener true
                     }
@@ -156,7 +163,14 @@ class BrowserWebView() : AppCompatActivity() {
                             val intent = Intent(this, HistoryActivity::class.java)
                             startActivity(intent)
                         } else if (item.title.equals("Bookmarks")) {
-
+                            val intent = Intent(this, BookMarkActivity::class.java)
+                            startActivity(intent)
+                        } else if (item.title.equals("Add Bookmark")) {
+                            realm.executeTransaction {
+                                Toast.makeText(this, webView?.url.toString(), Toast.LENGTH_SHORT).show()
+                                val bookmark = realm.createObject(BookmarkModel::class.java)
+                                bookmark.setBookMark(webView?.url.toString())
+                            }
                         }
                         return@setOnMenuItemClickListener true
                     }
@@ -197,6 +211,9 @@ class BrowserWebView() : AppCompatActivity() {
         return realm.where(HistoryModel::class.java).findAll()
     }
 
+    fun getBookmark(realm : Realm) : OrderedRealmCollection<BookmarkModel> {
+        return realm.where(BookmarkModel::class.java).findAll()
+    }
     fun browserWork(bundle : Bundle?) {
 
         val MyActivity = this

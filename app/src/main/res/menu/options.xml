@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/addbookmark"
-        android:title="Add Bookmarks" />
+        android:title="Add Bookmark" />
 
     <item
         android:id="@+id/bookmark"
