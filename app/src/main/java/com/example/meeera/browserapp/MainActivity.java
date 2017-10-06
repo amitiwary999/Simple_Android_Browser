@@ -25,16 +25,24 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.tabLayout)
+    //@BindView(R.id.tabLayout)
     TabLayout tabLayout;
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
+    //@BindView(R.id.viewpager)
+      ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout)findViewById(R.id.tabLayout);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         setupviewpager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setUpTabIcons();

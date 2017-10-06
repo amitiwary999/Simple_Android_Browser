@@ -8,9 +8,6 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
 import android.view.Window
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -18,16 +15,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import com.example.meeera.browserapp.View.CastomWebView
-import com.example.meeera.browserapp.View.CustomWebView
 import kotlinx.android.synthetic.main.activity_web1_view.*
-import kotlinx.android.synthetic.main.activity_webview.*
-import android.support.annotation.IdRes
 import android.widget.PopupMenu
 import com.example.meeera.browserapp.Model.HistoryModel
-import com.roughike.bottombar.OnTabSelectListener
-import com.example.meeera.browserapp.R.id.bottomBar
+import com.example.meeera.browserapp.Model.HistryModel
 import io.realm.Realm
 import io.realm.RealmResults
+import kotlin.properties.Delegates
 
 
 /**
@@ -38,13 +32,15 @@ class BrowserWebView() : AppCompatActivity() {
     var webView : WebView?= null
     var currentUrl : String ?= null
     var bundle : Bundle ?= null
-    var realm: Realm = Realm.getDefaultInstance()
+    var realm: Realm by Delegates.notNull()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.window.requestFeature(Window.FEATURE_PROGRESS)
         setContentView(R.layout.activity_web1_view)
+        realm = Realm.getDefaultInstance()
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
-        webView = findViewById(R.id.webView) as? CastomWebView
+        webView = findViewById(R.id.webView) as? WebView
         webView?.settings?.javaScriptEnabled = true //enables javascript in our browser
         webView?.settings?.useWideViewPort = true //web page completely zoomed down
         webView?.settings?.setAppCacheMaxSize(8*1024*1024) // 8 MB for cache
@@ -67,25 +63,27 @@ class BrowserWebView() : AppCompatActivity() {
                 // TODO Auto-generated method stub
                 super.onPageFinished(view, url)
                 // add to history when page has finished loading and page has loaded successfully
-                addToHistory()
+                addToHistory(realm)
                 //webViewBitmap[0] = createWebViewToBitmap()
             }
 
-            private fun addToHistory() {
+            private fun addToHistory(realm : Realm) {
                 // TODO Auto-generated method stub
                 val id = PreferenceManager.getDefaultSharedPreferences(applicationContext).getLong("count", 0)
                 if (willSave == true) {
-                    realm.executeTransactionAsync( { bgRealm ->
-                        val history = bgRealm.createObject(HistoryModel::class.java)
-                        history.setHistoryData(webView?.url.toString())
-                        realm.commitTransaction()
-
-                    })
+                    //realm.beginTransaction()
+                    realm.executeTransaction{
+                        val history = realm.createObject(HistoryModel::class.java)
+                        //history.history = webView?.url.toString()
+                        history.setHistory(webView?.url.toString())
+                        //realm.commitTransaction()
+                    }
+                   // realm.commitTransaction()
                 }
             }
 
-            public fun getHistory() : RealmResults<HistoryModel>{
-                return realm.where(HistoryModel::class.java).findAll()
+            public fun getHistory() : RealmResults<HistryModel>{
+                return realm.where(HistryModel::class.java).findAll()
             }
 
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
@@ -127,8 +125,9 @@ class BrowserWebView() : AppCompatActivity() {
                         } else if (item.title.equals("Bookmarks")) {
 
                         }
-                        return@setOnMenuItemClickListener false
+                        return@setOnMenuItemClickListener true
                     }
+                    menu?.show()
                 }
             }
         }
@@ -178,11 +177,11 @@ class BrowserWebView() : AppCompatActivity() {
             webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
         }
 
-        bundle = intent.extras
-        browserWork(bundle)
+        //bundle = intent.extras
+        browserWork()
     }
 
-    fun browserWork(bundle : Bundle?) {
+    fun browserWork(/*bundle : Bundle?*/) {
 
         val MyActivity = this
         webView?.setWebChromeClient(object : WebChromeClient() {
@@ -215,9 +214,9 @@ class BrowserWebView() : AppCompatActivity() {
         } else {
             // will get the address from bundle
             try {
-                webView?.loadUrl(bundle.getString("link"))
-                currentUrl = webView?.getUrl()
-                Toast.makeText(this, bundle.getString("link"), Toast.LENGTH_SHORT).show()
+                //webView?.loadUrl(bundle.getString("link"))
+                //currentUrl = webView?.getUrl()
+                //Toast.makeText(this, bundle.getString("link"), Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
