@@ -1,2 +1,2 @@
 # Simple_Android_Browser
-A simple android app which can be use as as a browser.
+A simple browser app using which user can browse some site. History and bookmark part is added and now i am working on daily news part.
