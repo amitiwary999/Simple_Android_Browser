@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.meeera.browserapp.Adapter.HomeAdapter
-import com.example.meeera.browserapp.BrawserWebView
 import com.example.meeera.browserapp.BrowserWebView
 import com.example.meeera.browserapp.Data.HomrAdapterData
 import com.example.meeera.browserapp.MainActivity
