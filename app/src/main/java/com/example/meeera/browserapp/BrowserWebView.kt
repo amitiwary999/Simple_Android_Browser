@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.view.menu.MenuPopupHelper
@@ -19,7 +18,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_web1_view.*
-import android.widget.PopupMenu
+import com.example.meeera.browserapp.Activity.BookMarkActivity
+import com.example.meeera.browserapp.Activity.HistoryActivity
+import com.example.meeera.browserapp.Activity.MainActivity
 import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.Model.HistoryModel
 import io.realm.OrderedRealmCollection

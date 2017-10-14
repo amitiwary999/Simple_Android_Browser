@@ -3,7 +3,6 @@ package com.example.meeera.browserapp.Fragment
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -14,12 +13,10 @@ import android.view.ViewGroup
 import com.example.meeera.browserapp.Adapter.HomeAdapter
 import com.example.meeera.browserapp.BrowserWebView
 import com.example.meeera.browserapp.Data.HomrAdapterData
-import com.example.meeera.browserapp.MainActivity
+import com.example.meeera.browserapp.Activity.MainActivity
 import com.example.meeera.browserapp.Model.HomeModel
 import com.example.meeera.browserapp.R
 import android.util.DisplayMetrics
-import android.view.Display
-import android.content.Context.WINDOW_SERVICE
 import android.util.Log
 import android.view.WindowManager
 

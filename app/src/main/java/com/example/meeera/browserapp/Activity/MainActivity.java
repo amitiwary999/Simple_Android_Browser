@@ -1,4 +1,4 @@
-package com.example.meeera.browserapp;
+package com.example.meeera.browserapp.Activity;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,12 +15,11 @@ import android.widget.TextView;
 import com.example.meeera.browserapp.Fragment.Home;
 import com.example.meeera.browserapp.Fragment.News;
 import com.example.meeera.browserapp.Fragment.Repo;
-import com.roughike.bottombar.BottomBar;
+import com.example.meeera.browserapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
