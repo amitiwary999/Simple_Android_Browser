@@ -5,7 +5,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:id="@+id/homeitem"
         android:layout_margin="10dp"/>
 </LinearLayout>

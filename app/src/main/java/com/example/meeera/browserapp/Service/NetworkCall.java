@@ -31,13 +31,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkCall {
     public getData data;
     public List<ArticleDetail> articles = new ArrayList<>();
+    List<ArticleDetail> combined = new ArrayList<>();
     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/").addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
     Observable<Articles> business = retrofit.create(NewService.class).getNews("business-insider", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
     Observable<Articles> espn = retrofit.create(NewService.class).getNews("espn", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
     public Observable<ArticleEvent> article = Observable.zip(business, espn, new BiFunction<Articles, Articles, ArticleEvent>() {
         @Override
         public ArticleEvent apply(Articles articles, Articles articles2) throws Exception {
-            return new ArticleEvent(articles.getArticles());
+            combined.addAll(articles.getArticles());
+            combined.addAll(articles2.getArticles());
+            return new ArticleEvent(combined);
         }
     });
 

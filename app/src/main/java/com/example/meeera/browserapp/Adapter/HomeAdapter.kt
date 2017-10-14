@@ -14,7 +14,7 @@ import com.example.meeera.browserapp.R
 /**
  * Created by meeera on 22/9/17.
  */
-class HomeAdapter(var data: ArrayList<HomeModel>, var itemClick : onItemClicked, var imgBitmap : Array<Bitmap?>) : RecyclerView.Adapter<HomeAdapter.MyViewHolder>() {
+class HomeAdapter(var data: ArrayList<HomeModel>, var itemClick : onItemClicked, var imgBitmap : Array<Int?>) : RecyclerView.Adapter<HomeAdapter.MyViewHolder>() {
 
     override fun getItemCount(): Int {
         return data.size
@@ -22,7 +22,8 @@ class HomeAdapter(var data: ArrayList<HomeModel>, var itemClick : onItemClicked,
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         if(position<imgBitmap.size) {
-            holder.img.setBackgroundDrawable(BitmapDrawable(imgBitmap[position]))
+            holder.img.setImageResource(imgBitmap[position].toString().toInt())
+           // holder.img.setBackgroundDrawable(BitmapDrawable(imgBitmap[position]))
         }
         holder.img.setOnClickListener({
             itemClick.onItemClick(position)

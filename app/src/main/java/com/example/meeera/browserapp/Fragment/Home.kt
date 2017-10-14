@@ -20,6 +20,7 @@ import com.example.meeera.browserapp.R
 import android.util.DisplayMetrics
 import android.view.Display
 import android.content.Context.WINDOW_SERVICE
+import android.util.Log
 import android.view.WindowManager
 
 
@@ -39,16 +40,19 @@ class Home : Fragment(), HomeAdapter.onItemClicked {
         val metrics = DisplayMetrics()
         display.getMetrics(metrics)
         var size : Int = metrics.widthPixels/3
+        Log.d("size", "size"+metrics.heightPixels/3)
         recyclerview = view?.findViewById(R.id.grdlist) as RecyclerView
         val imagBitmap = arrayOfNulls<Bitmap>(HomrAdapterData::imgArr.get(HomrAdapterData()).size)
+        val imgInt = arrayOfNulls<Int>(HomrAdapterData::imgArr.get(HomrAdapterData()).size)
         for(i in 0..HomrAdapterData::imgArr.get(HomrAdapterData()).size-1) {
-            imagBitmap[i] = BitmapFactory.decodeResource(context.resources, HomrAdapterData::imgArr.get(HomrAdapterData())[i])
-            imagBitmap[i] = Bitmap.createScaledBitmap(imagBitmap[i], size, size, true)
+            //imagBitmap[i] = BitmapFactory.decodeResource(context.resources, HomrAdapterData::imgArr.get(HomrAdapterData())[i])
+            //imagBitmap[i] = Bitmap.createScaledBitmap(imagBitmap[i], size, size, true)
+            imgInt[i] = HomrAdapterData::imgArr.get(HomrAdapterData())[i]
             data.add(HomeModel(HomrAdapterData::imgArr.get(HomrAdapterData())[i], HomrAdapterData::linkArr.get(HomrAdapterData())[i]))
 
         }
 
-        recyclerview?.setAdapter(HomeAdapter(data, this, imagBitmap))
+        recyclerview?.setAdapter(HomeAdapter(data, this, imgInt))
         recyclerview?.layoutManager = GridLayoutManager(activity.applicationContext, 3)
         return view
     }
