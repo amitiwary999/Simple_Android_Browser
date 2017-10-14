@@ -14,7 +14,7 @@ import com.example.meeera.browserapp.R
  */
 class Repo : Fragment() {
     var listview : ListView ?= null
-    var urlNames = arrayOf("Google News", "PC World", "CNN World", "JavaWorld", "ESPN Cricinfo", "Goal.com India")
+    var urlNames = arrayOf("Business-Insider", "ESPN", "TechCrunch", "Metro", "MTV News")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.repo_fragment, container, false)
         listview = view.findViewById(R.id.repo_listview) as ListView
