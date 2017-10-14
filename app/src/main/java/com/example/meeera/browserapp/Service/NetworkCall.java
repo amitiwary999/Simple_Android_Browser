@@ -20,6 +20,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function5;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -35,15 +36,29 @@ public class NetworkCall {
     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://newsapi.org/").addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
     Observable<Articles> business = retrofit.create(NewService.class).getNews("business-insider", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
     Observable<Articles> espn = retrofit.create(NewService.class).getNews("espn", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-    public Observable<ArticleEvent> article = Observable.zip(business, espn, new BiFunction<Articles, Articles, ArticleEvent>() {
+    Observable<Articles> techcrunch = retrofit.create(NewService.class).getNews("techcrunch", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+    Observable<Articles> mtvNews = retrofit.create(NewService.class).getNews("mtv-news", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+    Observable<Articles> metro = retrofit.create(NewService.class).getNews("metro", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
+   /* public Observable<ArticleEvent> article = Observable.zip(business, espn, new BiFunction<Articles, Articles, ArticleEvent>() {
         @Override
         public ArticleEvent apply(Articles articles, Articles articles2) throws Exception {
             combined.addAll(articles.getArticles());
             combined.addAll(articles2.getArticles());
             return new ArticleEvent(combined);
         }
-    });
+    });*/
 
+    Observable<ArticleEvent> article = Observable.zip(business, espn, techcrunch, mtvNews, metro, new Function5<Articles, Articles, Articles, Articles, Articles, ArticleEvent>() {
+        @Override
+        public ArticleEvent apply(Articles articles, Articles articles2, Articles articles3, Articles articles4, Articles articles5) throws Exception {
+            combined.addAll(articles.getArticles());
+            combined.addAll(articles2.getArticles());
+            combined.addAll(articles3.getArticles());
+            combined.addAll(articles4.getArticles());
+            combined.addAll(articles5.getArticles());
+            return new ArticleEvent(combined);
+        }
+    });
     public NetworkCall(getData data) {
         this.data = data;
     }
