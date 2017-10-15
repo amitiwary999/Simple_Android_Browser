@@ -7,8 +7,8 @@ import io.realm.RealmObject;
  */
 
 public class HistoryModel extends RealmObject {
-    public String history;
 
+    public String history;
 
     public String getHistory() {
         return history;

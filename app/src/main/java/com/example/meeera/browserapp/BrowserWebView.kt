@@ -57,7 +57,6 @@ class BrowserWebView() : AppCompatActivity() {
         webView?.settings?.cacheMode = WebSettings.LOAD_DEFAULT
 
         //overrides a method so that a link in any web page does not load up in default browser
-      //  webView?.setWebViewClient(ViewClient())
         webView?.setWebViewClient(object : WebViewClient() {
             internal var willSave = true
 
@@ -85,7 +84,6 @@ class BrowserWebView() : AppCompatActivity() {
             }
 
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
-                // TODO Auto-generated method stub
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.d("SimpleBrowser : ", "Failed to load page")
                 willSave = false
@@ -163,70 +161,6 @@ class BrowserWebView() : AppCompatActivity() {
                         override fun onMenuModeChange(menu: MenuBuilder) {}
                     })
                     optionMenu.show()
-                  /*  var menu : PopupMenu ?= PopupMenu(this, findViewById(R.id.tab_option))
-                    menu?.menuInflater?.inflate(R.menu.options, menu.menu)
-                    var flag : Boolean = false
-                    val bookmark = realm.where(BookmarkModel::class.java).findAll()
-                    for(model in bookmark) {
-                        if(model.getBookMark().equals(webView?.url.toString())) {
-                            menu?.menu?.findItem(R.id.addbookmark)?.icon = getDrawable(R.drawable.ic_bookmark)
-                            flag = true
-                            break
-                        }
-                        menu?.menu?.findItem(R.id.addbookmark)?.icon = getDrawable(R.drawable.ic_bookmark_holo)
-                        flag = false
-                    }
-                    menu?.setOnMenuItemClickListener { item ->
-                        if (item.title.equals("History")) {
-                            val intent = Intent(this, HistoryActivity::class.java)
-                            startActivity(intent)
-                        } else if (item.title.equals("Bookmarks")) {
-                            val intent = Intent(this, BookMarkActivity::class.java)
-                            startActivity(intent)
-                        } else if (item.title.equals("Add Bookmark")) {
-                            realm.executeTransaction {
-                                if(!flag) {
-                                    menu.menu.findItem(R.id.addbookmark).icon = getDrawable(R.drawable.ic_bookmark)
-                                    val bookmark = realm.createObject(BookmarkModel::class.java)
-                                    bookmark.setBookMark(webView?.url.toString())
-                                } else {
-                                    menu.menu.findItem(R.id.addbookmark).icon = getDrawable(R.drawable.ic_bookmark_holo)
-                                    realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll().removeAt(0)
-                                }
-                            }
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
-                    menu?.show()*/
-                   /* var menu : PopupMenu ?= PopupMenu(this, findViewById(R.id.tab_option))
-                    menu?.menuInflater?.inflate(R.menu.options, menu.menu)
-                    menu?.setOnMenuItemClickListener { item ->
-                        if (item.title.equals("History")) {
-                            val intent = Intent(this, HistoryActivity::class.java)
-                            startActivity(intent)
-                        } else if (item.title.equals("Bookmarks")) {
-                            val intent = Intent(this, BookMarkActivity::class.java)
-                            startActivity(intent)
-                        } else if (item.title.equals("Add Bookmark")) {
-                            var flag : Boolean = false
-                            val bookmark = realm.where(BookmarkModel::class.java).findAll()
-                            for(model in bookmark) {
-                                if(model.getBookMark().equals(webView?.url.toString())) {
-                                    flag = true
-                                    break
-                                }
-                                flag = false
-                            }
-                                realm.executeTransaction {
-                                    if(!flag) {
-                                        val bookmark = realm.createObject(BookmarkModel::class.java)
-                                        bookmark.setBookMark(webView?.url.toString())
-                                    }
-                                }
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
-                    menu?.show()*/
                 }
             }
         }
@@ -302,41 +236,6 @@ class BrowserWebView() : AppCompatActivity() {
                         override fun onMenuModeChange(menu: MenuBuilder) {}
                     })
                     optionMenu.show()
-                   /* var menu : PopupMenu ?= PopupMenu(this, findViewById(R.id.tab_option))
-                    menu?.menuInflater?.inflate(R.menu.options, menu.menu)
-                    var flag : Boolean = false
-                    val bookmark = realm.where(BookmarkModel::class.java).findAll()
-                    for(model in bookmark) {
-                        if(model.getBookMark().equals(webView?.url.toString())) {
-                            menu?.menu?.findItem(R.id.addbookmark)?.icon = getDrawable(R.drawable.ic_bookmark)
-                            flag = true
-                            break
-                        }
-                        menu?.menu?.findItem(R.id.addbookmark)?.icon = getDrawable(R.drawable.ic_bookmark_holo)
-                        flag = false
-                    }
-                    menu?.setOnMenuItemClickListener { item ->
-                        if (item.title.equals("History")) {
-                            val intent = Intent(this, HistoryActivity::class.java)
-                            startActivity(intent)
-                        } else if (item.title.equals("Bookmarks")) {
-                            val intent = Intent(this, BookMarkActivity::class.java)
-                            startActivity(intent)
-                        } else if (item.title.equals("Add Bookmark")) {
-                            realm.executeTransaction {
-                                if(!flag) {
-                                    menu.menu.findItem(R.id.addbookmark).icon = getDrawable(R.drawable.ic_bookmark)
-                                    val bookmark = realm.createObject(BookmarkModel::class.java)
-                                    bookmark.setBookMark(webView?.url.toString())
-                                } else {
-                                    menu.menu.findItem(R.id.addbookmark).icon = getDrawable(R.drawable.ic_bookmark_holo)
-                                    realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll().removeAt(0)
-                                }
-                            }
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
-                    menu?.show()*/
                 }
             }
         }

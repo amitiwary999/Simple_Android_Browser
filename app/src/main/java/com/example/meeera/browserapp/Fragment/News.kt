@@ -1,6 +1,5 @@
 package com.example.meeera.browserapp.Fragment
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -31,10 +30,6 @@ class News : Fragment(), NetworkCall.getData {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater?.inflate(R.layout.news_fragment, container, false)
         recyclerview = view?.findViewById(R.id.grdlist) as RecyclerView
-        /*for(i in 0..NetworkCall::articles.get(NetworkCall(this)).size-1){
-            article[i] = NetworkCall::articles.get(NetworkCall(this))[i]
-            articles.add(NetworkCall::articles.get(NetworkCall(this))[i])
-        }*/
         return view
     }
 
@@ -42,8 +37,6 @@ class News : Fragment(), NetworkCall.getData {
         article = articles
         recyclerview?.adapter = NewsAdapter(article)
         recyclerview?.layoutManager = LinearLayoutManager(context)
-        Toast.makeText(activity, "Amit"+article.size, Toast.LENGTH_SHORT).show()
-        Log.d("doit", "yes"+article[0].title)
     }
 
 }

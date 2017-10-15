@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.meeera.browserapp.Model.HistoryModel
-import com.example.meeera.browserapp.Model.HistryModel
 import com.example.meeera.browserapp.R
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
