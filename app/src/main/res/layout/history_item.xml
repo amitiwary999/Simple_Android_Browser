@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp">
 <android.support.v7.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txthistory"
+        android:textColor="#000000"
+        android:textSize="15dp"
         android:layout_margin="5dp"/>
 </android.support.v7.widget.CardView>
 </LinearLayout>

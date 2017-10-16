@@ -20,9 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BrowserWebView"/>
-        <activity android:name=".Activity.HistoryActivity"/>
-        <activity android:name=".Activity.BookMarkActivity"/>
+        <activity android:name=".BrowserWebView" />
+        <activity
+            android:name=".Activity.HistoryActivity"
+            android:label="History"/>
+        <activity
+            android:name=".Activity.BookMarkActivity"
+            android:label="BookMark"/>
     </application>
 
 </manifest>

@@ -107,6 +107,7 @@ class BrowserWebView() : AppCompatActivity() {
                 R.id.tab_home -> {
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                     startActivity(intent)
+                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
                     finish()
                 }
 
@@ -147,11 +148,13 @@ class BrowserWebView() : AppCompatActivity() {
                                 R.id.bookmark -> {
                                     val intent = Intent(baseContext, BookMarkActivity::class.java)
                                     startActivity(intent)
+                                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
                                     return true
                                 }
                                 R.id.history -> {
                                     val intent = Intent(baseContext, HistoryActivity::class.java)
                                     startActivity(intent)
+                                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
                                     return true
                                 }
                                 else -> return false
@@ -222,11 +225,13 @@ class BrowserWebView() : AppCompatActivity() {
                                 R.id.bookmark -> {
                                     val intent = Intent(baseContext, BookMarkActivity::class.java)
                                     startActivity(intent)
+                                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
                                     return true
                                 }
                                 R.id.history -> {
                                     val intent = Intent(baseContext, HistoryActivity::class.java)
                                     startActivity(intent)
+                                    overridePendingTransition(R.anim.abc_fade_in, R.anim.abc_fade_out)
                                     return true
                                 }
                                 else -> return false
