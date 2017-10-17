@@ -39,6 +39,7 @@ class BrowserWebView() : AppCompatActivity() {
     var webView : WebView?= null
     var currentUrl : String ?= null
     var bundle : Bundle ?= null
+    var willSave :Boolean ?= true
     var realm: Realm by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,10 +77,12 @@ class BrowserWebView() : AppCompatActivity() {
             private fun addToHistory(realm : Realm) {
                 // TODO Auto-generated method stub
                 if (willSave == true) {
+                    Log.d("flag","flagcheck")
                     realm.executeTransaction{
                         val history = realm.createObject(HistoryModel::class.java)
                         history.setHistory(webView?.url.toString())
                     }
+                    willSave = false
                 }
             }
 

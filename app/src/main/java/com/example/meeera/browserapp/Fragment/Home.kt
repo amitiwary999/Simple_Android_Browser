@@ -31,7 +31,6 @@ class Home : Fragment(), HomeAdapter.onItemClicked {
     var data : ArrayList<HomeModel> = ArrayList()
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater?.inflate(R.layout.home_fragment, container, false)
-
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = wm.defaultDisplay
         val metrics = DisplayMetrics()

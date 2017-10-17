@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.meeera.browserapp.Activity.MainActivity
 import com.example.meeera.browserapp.Adapter.NewsAdapter
 import com.example.meeera.browserapp.Model.ArticleDetail
 import com.example.meeera.browserapp.R

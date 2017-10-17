@@ -5,7 +5,10 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="130dp"
+        android:layout_height="60dp"
         android:id="@+id/homeitem"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:background="@drawable/round"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"/>
 </LinearLayout>
