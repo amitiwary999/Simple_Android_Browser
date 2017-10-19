@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Adapter
 import android.widget.ImageView
+import android.widget.TextView
 import com.example.meeera.browserapp.Model.HomeModel
 import com.example.meeera.browserapp.R
 
@@ -23,6 +24,7 @@ class HomeAdapter(var data: ArrayList<HomeModel>, var itemClick : onItemClicked,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         if(position<imgBitmap.size) {
             holder.img.setImageResource(imgBitmap[position].toString().toInt())
+            holder.txt.text = data[position].title
            // holder.img.setBackgroundDrawable(BitmapDrawable(imgBitmap[position]))
         }
         holder.img.setOnClickListener({
@@ -38,6 +40,7 @@ class HomeAdapter(var data: ArrayList<HomeModel>, var itemClick : onItemClicked,
 
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         var img = itemView.findViewById(R.id.homeitem) as ImageView
+        var txt = itemView.findViewById(R.id.txttitle) as TextView
     }
 
     interface onItemClicked {

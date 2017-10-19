@@ -15,4 +15,7 @@ class HomrAdapterData {
                           "https://www.reddit.com/", "https://stackoverflow.com/", "https://www.twitter.com", "https://www.wikipedia.org", "https://www.yahoo.com", "https://www.youtube.com",
                           "https://www.cricbuzz.com", "https://www.paytm.com", "https://www.indeed.co.in")
 
+    val titleArr = arrayOf("Amazon", "Ebay", "Facebook", "Flipkart", "Gmail", "Google", "Instagram", "Linkedin", "Quora", "Reddit",
+                           "StackOverflow", "Twitter", "Wikipedia", "Yahoo", "YouTube", "Cricbuzz", "Paytm", "Indeed")
+
 }

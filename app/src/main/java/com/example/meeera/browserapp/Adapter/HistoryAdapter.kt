@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.meeera.browserapp.Model.HistoryModel
 import com.example.meeera.browserapp.R
@@ -20,7 +21,11 @@ class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var h
 
         holder.txt.text = data?.get(position)?.getHistory()
         holder.card.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getHistory())
+            itemClick.onItemClick(data?.get(position)?.getHistory(), true)
+        })
+
+        holder.delete.setOnClickListener({
+            itemClick.onItemClick(data?.get(position)?.getHistory(), false)
         })
     }
 
@@ -39,9 +44,10 @@ class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var h
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         var txt = itemView.findViewById(R.id.txthistory) as TextView
         var card = itemView.findViewById(R.id.historycard) as CardView
+        var delete = itemView.findViewById(R.id.delete) as ImageView
     }
 
     interface onItemClicked {
-        fun onItemClick(data: String?)
+        fun onItemClick(data: String?, flag : Boolean)
     }
 }
