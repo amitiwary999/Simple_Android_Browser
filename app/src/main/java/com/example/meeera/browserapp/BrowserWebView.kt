@@ -142,7 +142,8 @@ class BrowserWebView() : AppCompatActivity() {
                                             bookmark.setBookMark(webView?.url.toString())
                                         } else {
                                             item.icon = getDrawable(R.drawable.ic_bookmark_holo)
-                                            realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll().removeAt(0)
+                                            var results : RealmResults<BookmarkModel> = realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll()
+                                            results.deleteAllFromRealm()
                                         }
                                     }
                                     return true

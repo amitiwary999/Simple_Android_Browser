@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginTop="5dp">
+    android:layout_marginTop="10dp">
 <android.support.v7.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,7 +18,6 @@
         android:id="@+id/txthistory"
         android:textColor="#000000"
         android:textSize="15dp"
-        android:maxLength="1"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="15dp"

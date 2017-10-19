@@ -21,11 +21,11 @@ class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var h
 
         holder.txt.text = data?.get(position)?.getHistory()
         holder.card.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getHistory(), true)
+            itemClick.onItemClick(data?.get(position)?.getHistory(), true, position)
         })
 
         holder.delete.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getHistory(), false)
+            itemClick.onItemClick(data?.get(position)?.getHistory(), false, position)
         })
     }
 
@@ -48,6 +48,6 @@ class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var h
     }
 
     interface onItemClicked {
-        fun onItemClick(data: String?, flag : Boolean)
+        fun onItemClick(data: String?, flag : Boolean, index : Int)
     }
 }

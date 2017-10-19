@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.R
@@ -25,7 +26,11 @@ class BookmarkAdapter(var context : Context, var itemClick : BookmarkAdapter.onI
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
         holder?.txt?.text = data?.get(position)?.getBookMark()
         holder?.card?.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getBookMark())
+            itemClick.onItemClick(data?.get(position)?.getBookMark(), true)
+        })
+
+        holder?.delete?.setOnClickListener({
+            itemClick.onItemClick(data?.get(position)?.getBookMark(), false)
         })
     }
 
@@ -37,8 +42,9 @@ class BookmarkAdapter(var context : Context, var itemClick : BookmarkAdapter.onI
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         var txt = itemView.findViewById(R.id.txtbookmark) as TextView
         var card = itemView.findViewById(R.id.bookmarkcard) as CardView
+        var delete = itemView.findViewById(R.id.delete) as ImageView
     }
     interface onItemClicked {
-        fun onItemClick(data: String?)
+        fun onItemClick(data: String?, flag : Boolean)
     }
 }

@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.example.meeera.browserapp.Adapter.BookmarkAdapter
 import com.example.meeera.browserapp.BrowserWebView
+import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.R
 import io.realm.Realm
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.bookmark_layout.*
 import kotlin.properties.Delegates
 
@@ -16,12 +18,19 @@ import kotlin.properties.Delegates
  */
 class BookMarkActivity : AppCompatActivity(), BookmarkAdapter.onItemClicked {
 
-    override fun onItemClick(data: String?) {
-        val intent = Intent(this, BrowserWebView::class.java)
-        intent.putExtra("link", data.toString())
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-        finish()
+    override fun onItemClick(data: String?, flag : Boolean) {
+        if(flag) {
+            val intent = Intent(this, BrowserWebView::class.java)
+            intent.putExtra("link", data.toString())
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        } else {
+            realm.executeTransaction {
+                var results : RealmResults<BookmarkModel> = realm.where(BookmarkModel::class.java).equalTo("bookMark", data).findAll()
+                results.deleteAllFromRealm()
+            }
+        }
     }
 
     var realm: Realm by Delegates.notNull()
