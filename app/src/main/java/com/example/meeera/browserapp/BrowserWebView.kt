@@ -11,6 +11,7 @@ import android.support.v7.view.menu.MenuPopupHelper
 import android.util.Log
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -46,6 +47,9 @@ class BrowserWebView() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.window.requestFeature(Window.FEATURE_PROGRESS)
         setContentView(R.layout.activity_web1_view)
+        lottieanim.setAnimation("no_internet_connection.json")
+        lottieanim.loop(true)
+        lottieanim.visibility = View.GONE
         realm = Realm.getDefaultInstance()
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
         webView = findViewById(R.id.webView) as? WebView
@@ -256,6 +260,8 @@ class BrowserWebView() : AppCompatActivity() {
         if (!isNetworkAvailable()) {
             Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
             webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
+            lottieanim.visibility = View.VISIBLE
+            lottieanim.playAnimation()
         }
 
         bundle = intent.extras

@@ -17,4 +17,11 @@
         app:bb_tabXmlResource="@xml/bottom_bar"
         app:bb_inActiveTabColor="#ffffff"
         app:bb_activeTabColor="#ffffff" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lottieanim"
+        android:background="#ffffff"
+        android:visibility="gone"/>
+
 </RelativeLayout>
