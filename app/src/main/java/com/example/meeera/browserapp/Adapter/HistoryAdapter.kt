@@ -11,21 +11,24 @@ import android.widget.TextView
 import com.example.meeera.browserapp.Model.HistoryModel
 import com.example.meeera.browserapp.R
 import io.realm.OrderedRealmCollection
+import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
+import kotlin.properties.Delegates
 
 /**
  * Created by meeera on 5/10/17.
  */
 class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var hisdata : OrderedRealmCollection<HistoryModel>, var autoUpdate : Boolean) : RealmRecyclerViewAdapter<HistoryModel, HistoryAdapter.MyViewHolder>(context, hisdata, autoUpdate) {
+    var realm : Realm by Delegates.notNull()
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         holder.txt.text = data?.get(position)?.getHistory()
         holder.card.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getHistory(), true, position)
+            itemClick.onItemClick(data?.get(position)?.getHistory())
         })
 
         holder.delete.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getHistory(), false, position)
+            realm.executeTransaction { data!!.deleteFromRealm(position) }
         })
     }
 
@@ -36,6 +39,10 @@ class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var h
         return myViewHolder
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        realm = Realm.getDefaultInstance()
+    }
     override fun getItemCount(): Int {
 
         return (data?.size)!!.toInt()
@@ -48,6 +55,6 @@ class HistoryAdapter(var context : Context, var itemClick : onItemClicked, var h
     }
 
     interface onItemClicked {
-        fun onItemClick(data: String?, flag : Boolean, index : Int)
+        fun onItemClick(data: String?)
     }
 }

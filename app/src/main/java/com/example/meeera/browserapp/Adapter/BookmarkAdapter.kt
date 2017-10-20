@@ -11,12 +11,15 @@ import android.widget.TextView
 import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.R
 import io.realm.OrderedRealmCollection
+import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
+import kotlin.properties.Delegates
 
 /**
  * Created by meeera on 6/10/17.
  */
 class BookmarkAdapter(var context : Context, var itemClick : BookmarkAdapter.onItemClicked, var bookMarkData : OrderedRealmCollection<BookmarkModel>, var autoUpdate : Boolean) : RealmRecyclerViewAdapter<BookmarkModel, BookmarkAdapter.MyViewHolder>(context, bookMarkData, autoUpdate){
+    var realm : Realm by Delegates.notNull()
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder {
         var view = LayoutInflater.from(parent?.context).inflate(R.layout.bookmark_item, parent, false)
         var myViewHolder = MyViewHolder(view)
@@ -26,12 +29,17 @@ class BookmarkAdapter(var context : Context, var itemClick : BookmarkAdapter.onI
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
         holder?.txt?.text = data?.get(position)?.getBookMark()
         holder?.card?.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getBookMark(), true)
+            itemClick.onItemClick(data?.get(position)?.getBookMark())
         })
 
         holder?.delete?.setOnClickListener({
-            itemClick.onItemClick(data?.get(position)?.getBookMark(), false)
+            realm.executeTransaction { data!!.deleteFromRealm(position) }
         })
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        realm = Realm.getDefaultInstance()
     }
 
     override fun getItemCount(): Int {
@@ -45,6 +53,6 @@ class BookmarkAdapter(var context : Context, var itemClick : BookmarkAdapter.onI
         var delete = itemView.findViewById(R.id.delete) as ImageView
     }
     interface onItemClicked {
-        fun onItemClick(data: String?, flag : Boolean)
+        fun onItemClick(data: String?)
     }
 }

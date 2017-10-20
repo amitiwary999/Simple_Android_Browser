@@ -17,19 +17,12 @@ import kotlin.properties.Delegates
  * Created by meeera on 5/10/17.
  */
 class HistoryActivity : AppCompatActivity(), HistoryAdapter.onItemClicked {
-    override fun onItemClick(position: String?, flag : Boolean, index : Int) {
-        if(flag) {
+    override fun onItemClick(position: String?) {
             val intent = Intent(this, BrowserWebView::class.java)
             intent.putExtra("link", position.toString())
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             finish()
-        } else {
-            realm.executeTransaction {
-                var results : RealmResults<HistoryModel> = realm.where(HistoryModel::class.java).findAll()
-                results.deleteFromRealm(index)
-            }
-        }
     }
 
     var realm: Realm by Delegates.notNull()
