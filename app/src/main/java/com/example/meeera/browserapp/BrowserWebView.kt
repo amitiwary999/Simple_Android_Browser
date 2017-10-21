@@ -24,6 +24,7 @@ import com.example.meeera.browserapp.Activity.HistoryActivity
 import com.example.meeera.browserapp.Activity.MainActivity
 import com.example.meeera.browserapp.Model.BookmarkModel
 import com.example.meeera.browserapp.Model.HistoryModel
+import com.example.meeera.browserapp.Service.ConnectivityReceiver
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmResults
@@ -36,7 +37,8 @@ import kotlin.properties.Delegates
  * Created by meeera on 22/9/17.
  */
 @SuppressLint("SetJavaScriptEnabled")
-class BrowserWebView() : AppCompatActivity() {
+class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
+
     var webView : WebView?= null
     var currentUrl : String ?= null
     var bundle : Bundle ?= null
@@ -49,7 +51,6 @@ class BrowserWebView() : AppCompatActivity() {
         setContentView(R.layout.activity_web1_view)
         lottieanim.setAnimation("no_internet_connection.json")
         lottieanim.loop(true)
-        lottieanim.visibility = View.GONE
         realm = Realm.getDefaultInstance()
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
         webView = findViewById(R.id.webView) as? WebView
@@ -60,43 +61,6 @@ class BrowserWebView() : AppCompatActivity() {
         webView?.settings?.allowFileAccess = true
         webView?.settings?.setAppCacheEnabled(true)
         webView?.settings?.cacheMode = WebSettings.LOAD_DEFAULT
-
-        //overrides a method so that a link in any web page does not load up in default browser
-        webView?.setWebViewClient(object : WebViewClient() {
-            internal var willSave = true
-
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                view?.loadUrl(url.toString())
-                return true
-            }
-
-            override fun onPageFinished(view: WebView, url: String) {
-                // TODO Auto-generated method stub
-                super.onPageFinished(view, url)
-                // add to history when page has finished loading and page has loaded successfully
-                addToHistory(realm)
-                //webViewBitmap[0] = createWebViewToBitmap()
-            }
-
-            private fun addToHistory(realm : Realm) {
-                // TODO Auto-generated method stub
-                if (willSave == true) {
-                    Log.d("flag","flagcheck")
-                    realm.executeTransaction{
-                        val history = realm.createObject(HistoryModel::class.java)
-                        history.setHistory(webView?.url.toString())
-                    }
-                    willSave = false
-                }
-            }
-
-            override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
-                super.onReceivedError(view, errorCode, description, failingUrl)
-                Log.d("SimpleBrowser : ", "Failed to load page")
-                willSave = false
-            }
-
-        })
 
         bottomBar.setOnTabSelectListener { tabId ->
             var intent = Intent(this, MainActivity::class.java)
@@ -257,15 +221,16 @@ class BrowserWebView() : AppCompatActivity() {
          * Check if network is available
          * If not available display a proper Toast
          */
-        if (!isNetworkAvailable()) {
+        if (!ConnectivityReceiver.isConnected()) {
             Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
             webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
             lottieanim.visibility = View.VISIBLE
             lottieanim.playAnimation()
+        } else {
+            lottieanim.cancelAnimation()
+            lottieanim.visibility = View.GONE
+            loadWebView()
         }
-
-        bundle = intent.extras
-        browserWork(bundle)
     }
 
     fun getHistory(realm : Realm) : OrderedRealmCollection<HistoryModel> {
@@ -275,6 +240,49 @@ class BrowserWebView() : AppCompatActivity() {
     fun getBookmark(realm : Realm) : OrderedRealmCollection<BookmarkModel> {
         return realm.where(BookmarkModel::class.java).findAll()
     }
+
+    fun loadWebView() {
+
+        //overrides a method so that a link in any web page does not load up in default browser
+        webView?.setWebViewClient(object : WebViewClient() {
+            internal var willSave = true
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                view?.loadUrl(url.toString())
+                return true
+            }
+
+            override fun onPageFinished(view: WebView, url: String) {
+                // TODO Auto-generated method stub
+                super.onPageFinished(view, url)
+                // add to history when page has finished loading and page has loaded successfully
+                addToHistory(realm)
+                //webViewBitmap[0] = createWebViewToBitmap()
+            }
+
+            private fun addToHistory(realm : Realm) {
+                // TODO Auto-generated method stub
+                if (willSave == true) {
+                    Log.d("flag","flagcheck")
+                    realm.executeTransaction{
+                        val history = realm.createObject(HistoryModel::class.java)
+                        history.setHistory(webView?.url.toString())
+                    }
+                    willSave = false
+                }
+            }
+
+            override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+                super.onReceivedError(view, errorCode, description, failingUrl)
+                Log.d("SimpleBrowser : ", "Failed to load page")
+                willSave = false
+            }
+
+        })
+        bundle = intent.extras
+        browserWork(bundle)
+    }
+
     fun browserWork(bundle : Bundle?) {
 
         val MyActivity = this
@@ -324,7 +332,18 @@ class BrowserWebView() : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        MyApplication.getInstance().setConnectivityListener(this);
         webView?.onResume()
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if(isConnected) {
+            lottieanim.cancelAnimation()
+            lottieanim.visibility = View.GONE
+            loadWebView()
+        } else {
+
+        }
     }
 
     private fun isNetworkAvailable(): Boolean {
