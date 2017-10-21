@@ -37,4 +37,10 @@ class BookMarkActivity : AppCompatActivity(), BookmarkAdapter.onItemClicked {
         recyclerbookmark.adapter = adapter
         recyclerbookmark.layoutManager = LinearLayoutManager(this)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
 }

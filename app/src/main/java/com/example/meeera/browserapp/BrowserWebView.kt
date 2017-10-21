@@ -1,9 +1,7 @@
 package com.example.meeera.browserapp
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
@@ -31,8 +29,6 @@ import io.realm.RealmResults
 import kotlin.properties.Delegates
 
 
-
-
 /**
  * Created by meeera on 22/9/17.
  */
@@ -54,13 +50,6 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         realm = Realm.getDefaultInstance()
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
         webView = findViewById(R.id.webView) as? WebView
-        webView?.settings?.javaScriptEnabled = true //enables javascript in our browser
-        webView?.settings?.useWideViewPort = true //web page completely zoomed down
-        webView?.settings?.setAppCacheMaxSize(8*1024*1024) // 8 MB for cache
-        webView?.settings?.setAppCachePath(applicationContext.cacheDir.absolutePath)
-        webView?.settings?.allowFileAccess = true
-        webView?.settings?.setAppCacheEnabled(true)
-        webView?.settings?.cacheMode = WebSettings.LOAD_DEFAULT
 
         bottomBar.setOnTabSelectListener { tabId ->
             var intent = Intent(this, MainActivity::class.java)
@@ -221,7 +210,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
          * Check if network is available
          * If not available display a proper Toast
          */
-        if (!ConnectivityReceiver.isConnected()) {
+       /* if (!ConnectivityReceiver.isConnected()) {
             Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
             webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
             lottieanim.visibility = View.VISIBLE
@@ -230,7 +219,8 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
             lottieanim.cancelAnimation()
             lottieanim.visibility = View.GONE
             loadWebView()
-        }
+        }*/
+        loadWebView()
     }
 
     fun getHistory(realm : Realm) : OrderedRealmCollection<HistoryModel> {
@@ -242,10 +232,17 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
     }
 
     fun loadWebView() {
-
+        webView?.settings?.javaScriptEnabled = true //enables javascript in our browser
+        webView?.settings?.useWideViewPort = true //web page completely zoomed down
+        webView?.settings?.setAppCacheMaxSize(8*1024*1024) // 8 MB for cache
+        webView?.settings?.setAppCachePath(applicationContext.cacheDir.absolutePath)
+        webView?.settings?.allowFileAccess = true
+        webView?.settings?.setAppCacheEnabled(true)
+        webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+        closeAnim()
         //overrides a method so that a link in any web page does not load up in default browser
         webView?.setWebViewClient(object : WebViewClient() {
-            internal var willSave = true
+            //internal var willSave = true
 
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url.toString())
@@ -273,6 +270,9 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
             }
 
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+                if(view.url.equals(failingUrl)) {
+                    showAnim()
+                }
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 Log.d("SimpleBrowser : ", "Failed to load page")
                 willSave = false
@@ -325,6 +325,17 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         }
     }
 
+    fun showAnim() {
+        lottieanim.visibility = View.VISIBLE
+        lottieanim.playAnimation()
+       // Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
+    }
+
+    fun closeAnim() {
+        lottieanim.cancelAnimation()
+        lottieanim.visibility = View.GONE
+    }
+
     override fun onPause() {
         super.onPause()
         webView?.onPause()
@@ -336,19 +347,18 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         webView?.onResume()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
         if(isConnected) {
-            lottieanim.cancelAnimation()
-            lottieanim.visibility = View.GONE
+            //lottieanim.cancelAnimation()
+            //lottieanim.visibility = View.GONE
             loadWebView()
         } else {
 
         }
-    }
-
-    private fun isNetworkAvailable(): Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val isActive = cm.activeNetworkInfo
-        return isActive != null && isActive.isConnected
     }
 }
