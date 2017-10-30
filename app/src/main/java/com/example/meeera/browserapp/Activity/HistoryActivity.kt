@@ -37,4 +37,9 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.onItemClicked {
         recyclerhistory.layoutManager = LinearLayoutManager(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
 }
