@@ -11,17 +11,22 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function5
 import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
+import io.realm.RealmList
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.properties.Delegates
 
 /**
  * Created by meeera on 15/10/17.
  */
 class NetworkCall(var data: getData) {
 
-    var articles: List<ArticleDetail> = ArrayList()
-    internal var combined: MutableList<ArticleDetail> = ArrayList()
+    var articles = RealmList<ArticleDetail>()
+    var realm: Realm by Delegates.notNull()
+    internal var combined = RealmList<ArticleDetail>()
     internal var retrofit = Retrofit.Builder().baseUrl("https://newsapi.org/").addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build()
     internal var business = retrofit.create(NewService::class.java).getNews("business-insider", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
     internal var espn = retrofit.create(NewService::class.java).getNews("espn", "a7822d7c58dd4e50b1ebb3e1b69486b6").subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread())
@@ -39,6 +44,7 @@ class NetworkCall(var data: getData) {
     })
 
     fun getSub() {
+        realm = Realm.getDefaultInstance()
         article.subscribe(object : Observer<ArticleEvent> {
             override fun onSubscribe(d: Disposable) {
 
