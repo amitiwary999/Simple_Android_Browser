@@ -33,11 +33,14 @@ class News : Fragment(), NetworkCall.getData {
         var calendar: Calendar = Calendar.getInstance()
         if (realm.where(ArticleDetail::class.java).findAll().size > 0) {
             val details = realm.where(ArticleDetail::class.java).findAll()
+            Log.d("today date", "date"+details[0].publishedAt?.substring(0, 10)+"     "+df.format(calendar.time))
             if (details[0].publishedAt?.substring(0, 10) == df.format(calendar.time)) {
                 flag = true
             }
             if (!flag) {
-                realm.where(ArticleDetail::class.java).findAll().deleteAllFromRealm()
+                realm.executeTransaction {
+                    realm.where(ArticleDetail::class.java).findAll().deleteAllFromRealm()
+                }
                 NetworkCall(this).getSub()
             }
         } else {
