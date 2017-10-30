@@ -1,5 +1,6 @@
 package com.example.meeera.browserapp.Adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.meeera.browserapp.Model.ArticleDetail
 import com.example.meeera.browserapp.R
+import io.realm.OrderedRealmCollection
+import io.realm.RealmRecyclerViewAdapter
 
 /**
  * Created by meeera on 13/10/17.
  */
-class NewsAdapter(var data : List<ArticleDetail>) : RecyclerView.Adapter<NewsAdapter.MyViewHolder>(){
+class NewsAdapter(var context: Context, var datas: OrderedRealmCollection<ArticleDetail>, var autoUpdate: Boolean) : RealmRecyclerViewAdapter<ArticleDetail, NewsAdapter.MyViewHolder>(context, datas, autoUpdate) {
+
     override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
-      holder?.head?.text = data[position].title
-      holder?.desc?.text = data[position].desc
+        holder?.head?.text = datas[position].title
+        holder?.desc?.text = datas[position].desc
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MyViewHolder {
@@ -24,10 +28,10 @@ class NewsAdapter(var data : List<ArticleDetail>) : RecyclerView.Adapter<NewsAda
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return datas.size
     }
 
-    class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var head = itemView.findViewById(R.id.txthead) as TextView
         var desc = itemView.findViewById(R.id.txtdesc) as TextView
     }
