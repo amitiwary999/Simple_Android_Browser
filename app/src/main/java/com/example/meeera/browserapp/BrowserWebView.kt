@@ -1,20 +1,21 @@
 package com.example.meeera.browserapp
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.view.menu.MenuPopupHelper
 import android.util.Log
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
+import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_web1_view.*
 import com.example.meeera.browserapp.Activity.BookMarkActivity
 import com.example.meeera.browserapp.Activity.HistoryActivity
@@ -50,6 +51,36 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
         webView = findViewById(R.id.webView) as? WebView
 
+        search.setOnClickListener({
+            search.isCursorVisible = true
+        })
+        search.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
+                var clickgo = false
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchGoogle()
+                    clickgo = true
+                }
+                return clickgo
+            }
+
+            private fun searchGoogle() {
+                search.isCursorVisible = false
+                val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken,
+                        InputMethodManager.HIDE_NOT_ALWAYS)
+                var address : String = search.text.toString()
+                Log.d("address", address)
+                if(address.startsWith("www.")){
+                    address = "https://"+address
+                } else if(address.startsWith("http")){
+                    address = address
+                } else {
+                    address = "https://www.google.com/search?q=" + address
+                }
+                webView?.loadUrl(address)
+            }
+        })
         bottomBar.setOnTabSelectListener { tabId ->
             var intent = Intent(this, MainActivity::class.java)
             when (tabId) {
@@ -204,7 +235,6 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                 }
             }
         }
-
         loadWebView()
     }
 
@@ -282,6 +312,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
 
                 // get current url as the web page loads  and set the url in the edit text
                 currentUrl = webView?.getUrl()
+                search.setText(currentUrl)
             }
         })
 
@@ -324,13 +355,20 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
 
     override fun onResume() {
         super.onResume()
+        search.isCursorVisible = false
         MyApplication.getInstance().setConnectivityListener(this);
         webView?.onResume()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         realm.close()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        search.isCursorVisible = false
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
