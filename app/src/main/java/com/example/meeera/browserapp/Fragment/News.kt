@@ -89,6 +89,9 @@ class News : Fragment(), NetworkCall.getData {
         }
         recyclerview?.adapter = NewsAdapter(activity, realm.where(ArticleDetail::class.java).findAll(), true)
         recyclerview?.layoutManager = LinearLayoutManager(context)
+        if(swipeToRefresh?.isRefreshing.toString().toBoolean()) {
+            swipeToRefresh?.isRefreshing = false
+        }
     }
 
     fun isConnected() : Boolean {
