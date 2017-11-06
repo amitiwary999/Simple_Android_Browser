@@ -4,10 +4,36 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search_white_18px"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"/>
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionSearch"
+            android:hint="Search"
+            android:layout_marginRight="10dp"
+            android:singleLine="true"
+            android:backgroundTint="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textColor="#ffffff">
+        </EditText>
+    </LinearLayout>
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/linearlayout"
         android:layout_marginBottom="?android:attr/actionBarSize"/>
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
