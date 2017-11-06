@@ -65,7 +65,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
             }
 
             private fun searchGoogle() {
-                search.isCursorVisible = false
+                search.isCursorVisible
                 val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken,
                         InputMethodManager.HIDE_NOT_ALWAYS)
@@ -364,11 +364,6 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
     override fun onDestroy() {
         super.onDestroy()
         realm.close()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        search.isCursorVisible = false
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
