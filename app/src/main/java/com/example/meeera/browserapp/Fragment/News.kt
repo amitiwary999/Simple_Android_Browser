@@ -2,7 +2,9 @@ package com.example.meeera.browserapp.Fragment
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
+import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -25,7 +27,7 @@ import kotlin.properties.Delegates
 /**
  * Created by meeera on 22/9/17.
  */
-class News : Fragment(), NetworkCall.getData {
+class News : Fragment(), NetworkCall.getData, NewsAdapter.onItemClicked {
 
     var realm: Realm by Delegates.notNull()
     var recyclerview: RecyclerView? = null
@@ -60,7 +62,7 @@ class News : Fragment(), NetworkCall.getData {
         Log.d("connected", "connect"+ isConnected())
         if (flag || !isConnected()) {
             Log.d("amit", "flag" + flag)
-            recyclerview?.adapter = NewsAdapter(activity, realm.where(ArticleDetail::class.java).findAll(), true)
+            recyclerview?.adapter = NewsAdapter(activity, realm.where(ArticleDetail::class.java).findAll(), this, true)
             recyclerview?.layoutManager = LinearLayoutManager(context)
         }
         swipeToRefresh?.setOnRefreshListener({
@@ -87,11 +89,18 @@ class News : Fragment(), NetworkCall.getData {
                 articleDetail.setUrlToImage(data.getUrlToImage())
             }
         }
-        recyclerview?.adapter = NewsAdapter(activity, realm.where(ArticleDetail::class.java).findAll(), true)
+        recyclerview?.adapter = NewsAdapter(activity, realm.where(ArticleDetail::class.java).findAll(), this, true)
         recyclerview?.layoutManager = LinearLayoutManager(context)
         if(swipeToRefresh?.isRefreshing.toString().toBoolean()) {
             swipeToRefresh?.isRefreshing = false
         }
+    }
+
+    override fun onItemClick(data: String?) {
+        var uri = Uri.parse(data)
+        var intent = CustomTabsIntent.Builder()
+        var customtab = intent.build()
+        customtab.launchUrl(activity, uri)
     }
 
     fun isConnected() : Boolean {
