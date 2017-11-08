@@ -38,11 +38,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        getIntent().putExtra("savedState", viewPager.getCurrentItem());
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         setupviewpager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
         setUpTabIcons();
+        if(getIntent().getExtras() != null){
+            viewPager.setCurrentItem(getIntent().getExtras().getInt("savedState"));
+        }
     }
 
     public void setUpTabIcons() {
