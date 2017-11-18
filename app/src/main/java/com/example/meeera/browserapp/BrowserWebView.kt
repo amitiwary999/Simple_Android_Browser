@@ -1,21 +1,21 @@
 package com.example.meeera.browserapp
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.menu.MenuBuilder
 import android.support.v7.view.menu.MenuPopupHelper
 import android.util.Log
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
+import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_web1_view.*
 import com.example.meeera.browserapp.Activity.BookMarkActivity
 import com.example.meeera.browserapp.Activity.HistoryActivity
@@ -35,10 +35,10 @@ import kotlin.properties.Delegates
 @SuppressLint("SetJavaScriptEnabled")
 class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
-    var webView : WebView?= null
-    var currentUrl : String ?= null
-    var bundle : Bundle ?= null
-    var willSave :Boolean ?= true
+    var webView: WebView? = null
+    var currentUrl: String? = null
+    var bundle: Bundle? = null
+    var willSave: Boolean? = true
     var realm: Realm by Delegates.notNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +51,39 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         window.setFeatureInt(Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON)
         webView = findViewById(R.id.webView) as? WebView
 
+        search.setOnClickListener({
+            search.isCursorVisible = true
+        })
+        search.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView, actionId: Int, event: KeyEvent?): Boolean {
+                var clickgo = false
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchGoogle()
+                    clickgo = true
+                }
+                return clickgo
+            }
+
+            private fun searchGoogle() {
+                search.isCursorVisible
+                val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputManager.hideSoftInputFromWindow(currentFocus!!.windowToken,
+                        InputMethodManager.HIDE_NOT_ALWAYS)
+                var address : String = search.text.toString()
+                Log.d("address", address)
+                if(address.startsWith("www.")){
+                    address = "https://"+address
+                } else if(address.startsWith("http")){
+                    address = address
+                } else {
+                    address = "https://www.google.com/search?q=" + address
+                }
+                webView?.loadUrl(address)
+            }
+        })
         bottomBar.setOnTabSelectListener { tabId ->
             var intent = Intent(this, MainActivity::class.java)
-            when(tabId) {
+            when (tabId) {
                 R.id.tab_back ->
                     if (webView?.canGoBack().toString().toBoolean()) {
                         webView?.goBack()
@@ -72,15 +102,15 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                 }
 
                 R.id.tab_option -> {
-                    var menuBuilder : MenuBuilder = MenuBuilder(this)
-                    var inflater : MenuInflater = MenuInflater(this)
+                    var menuBuilder: MenuBuilder = MenuBuilder(this)
+                    var inflater: MenuInflater = MenuInflater(this)
                     inflater.inflate(R.menu.options, menuBuilder)
-                    var optionMenu : MenuPopupHelper = MenuPopupHelper(this, menuBuilder, findViewById(R.id.tab_option))
+                    var optionMenu: MenuPopupHelper = MenuPopupHelper(this, menuBuilder, findViewById(R.id.tab_option))
                     optionMenu.setForceShowIcon(true)
-                    var flag : Boolean = false
+                    var flag: Boolean = false
                     val bookmark = realm.where(BookmarkModel::class.java).findAll()
-                    for(model in bookmark) {
-                        if(model.getBookMark().equals(webView?.url.toString())) {
+                    for (model in bookmark) {
+                        if (model.getBookMark().equals(webView?.url.toString())) {
                             menuBuilder.findItem(R.id.addbookmark).icon = getDrawable(R.drawable.ic_bookmark)
                             flag = true
                             break
@@ -93,13 +123,13 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                             when (item.getItemId()) {
                                 R.id.addbookmark -> {
                                     realm.executeTransaction {
-                                        if(!flag) {
+                                        if (!flag) {
                                             item.icon = getDrawable(R.drawable.ic_bookmark)
                                             val bookmark = realm.createObject(BookmarkModel::class.java)
                                             bookmark.setBookMark(webView?.url.toString())
                                         } else {
                                             item.icon = getDrawable(R.drawable.ic_bookmark_holo)
-                                            var results : RealmResults<BookmarkModel> = realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll()
+                                            var results: RealmResults<BookmarkModel> = realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll()
                                             results.deleteAllFromRealm()
                                         }
                                     }
@@ -131,7 +161,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
 
         bottomBar.setOnTabReselectListener { tabId ->
             var intent = Intent(this, MainActivity::class.java)
-            when(tabId) {
+            when (tabId) {
                 R.id.tab_back ->
                     if (webView?.canGoBack().toString().toBoolean()) {
                         webView?.goBack()
@@ -149,15 +179,15 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                 }
 
                 R.id.tab_option -> {
-                    var menuBuilder : MenuBuilder = MenuBuilder(this)
-                    var inflater : MenuInflater = MenuInflater(this)
+                    var menuBuilder: MenuBuilder = MenuBuilder(this)
+                    var inflater: MenuInflater = MenuInflater(this)
                     inflater.inflate(R.menu.options, menuBuilder)
-                    var optionMenu : MenuPopupHelper = MenuPopupHelper(this, menuBuilder, findViewById(R.id.tab_option))
+                    var optionMenu: MenuPopupHelper = MenuPopupHelper(this, menuBuilder, findViewById(R.id.tab_option))
                     optionMenu.setForceShowIcon(true)
-                    var flag : Boolean = false
+                    var flag: Boolean = false
                     val bookmark = realm.where(BookmarkModel::class.java).findAll()
-                    for(model in bookmark) {
-                        if(model.getBookMark().equals(webView?.url.toString())) {
+                    for (model in bookmark) {
+                        if (model.getBookMark().equals(webView?.url.toString())) {
                             menuBuilder.findItem(R.id.addbookmark).icon = getDrawable(R.drawable.ic_bookmark)
                             flag = true
                             break
@@ -170,13 +200,13 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                             when (item.getItemId()) {
                                 R.id.addbookmark -> {
                                     realm.executeTransaction {
-                                        if(!flag) {
+                                        if (!flag) {
                                             item.icon = getDrawable(R.drawable.ic_bookmark)
                                             val bookmark = realm.createObject(BookmarkModel::class.java)
                                             bookmark.setBookMark(webView?.url.toString())
                                         } else {
                                             item.icon = getDrawable(R.drawable.ic_bookmark_holo)
-                                            var results : RealmResults<BookmarkModel> = realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll()
+                                            var results: RealmResults<BookmarkModel> = realm.where(BookmarkModel::class.java).equalTo("bookMark", webView?.url.toString()).findAll()
                                             results.deleteAllFromRealm()
                                         }
                                     }
@@ -205,36 +235,21 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                 }
             }
         }
-
-        /*
-         * Check if network is available
-         * If not available display a proper Toast
-         */
-       /* if (!ConnectivityReceiver.isConnected()) {
-            Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
-            webView?.settings?.cacheMode = WebSettings.LOAD_CACHE_ONLY
-            lottieanim.visibility = View.VISIBLE
-            lottieanim.playAnimation()
-        } else {
-            lottieanim.cancelAnimation()
-            lottieanim.visibility = View.GONE
-            loadWebView()
-        }*/
         loadWebView()
     }
 
-    fun getHistory(realm : Realm) : OrderedRealmCollection<HistoryModel> {
+    fun getHistory(realm: Realm): OrderedRealmCollection<HistoryModel> {
         return realm.where(HistoryModel::class.java).findAll()
     }
 
-    fun getBookmark(realm : Realm) : OrderedRealmCollection<BookmarkModel> {
+    fun getBookmark(realm: Realm): OrderedRealmCollection<BookmarkModel> {
         return realm.where(BookmarkModel::class.java).findAll()
     }
 
     fun loadWebView() {
         webView?.settings?.javaScriptEnabled = true //enables javascript in our browser
         webView?.settings?.useWideViewPort = true //web page completely zoomed down
-        webView?.settings?.setAppCacheMaxSize(8*1024*1024) // 8 MB for cache
+        webView?.settings?.setAppCacheMaxSize(8 * 1024 * 1024) // 8 MB for cache
         webView?.settings?.setAppCachePath(applicationContext.cacheDir.absolutePath)
         webView?.settings?.allowFileAccess = true
         webView?.settings?.setAppCacheEnabled(true)
@@ -242,7 +257,6 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         closeAnim()
         //overrides a method so that a link in any web page does not load up in default browser
         webView?.setWebViewClient(object : WebViewClient() {
-            //internal var willSave = true
 
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 view?.loadUrl(url.toString())
@@ -254,14 +268,13 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
                 super.onPageFinished(view, url)
                 // add to history when page has finished loading and page has loaded successfully
                 addToHistory(realm)
-                //webViewBitmap[0] = createWebViewToBitmap()
             }
 
-            private fun addToHistory(realm : Realm) {
+            private fun addToHistory(realm: Realm) {
                 // TODO Auto-generated method stub
                 if (willSave == true) {
-                    Log.d("flag","flagcheck")
-                    realm.executeTransaction{
+                    Log.d("flag", "flagcheck")
+                    realm.executeTransaction {
                         val history = realm.createObject(HistoryModel::class.java)
                         history.setHistory(webView?.url.toString())
                     }
@@ -270,7 +283,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
             }
 
             override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
-                if(view.url.equals(failingUrl)) {
+                if (view.url.equals(failingUrl)) {
                     showAnim()
                 }
                 super.onReceivedError(view, errorCode, description, failingUrl)
@@ -283,7 +296,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         browserWork(bundle)
     }
 
-    fun browserWork(bundle : Bundle?) {
+    fun browserWork(bundle: Bundle?) {
 
         val MyActivity = this
         webView?.setWebChromeClient(object : WebChromeClient() {
@@ -299,8 +312,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
 
                 // get current url as the web page loads  and set the url in the edit text
                 currentUrl = webView?.getUrl()
-                // url.setText(currentUrl)
-
+                search.setText(currentUrl)
             }
         })
 
@@ -328,7 +340,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
     fun showAnim() {
         lottieanim.visibility = View.VISIBLE
         lottieanim.playAnimation()
-       // Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
+        // Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
     }
 
     fun closeAnim() {
@@ -343,8 +355,10 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
 
     override fun onResume() {
         super.onResume()
+        search.isCursorVisible = false
         MyApplication.getInstance().setConnectivityListener(this);
         webView?.onResume()
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
     override fun onDestroy() {
@@ -353,12 +367,8 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
     }
 
     override fun onNetworkConnectionChanged(isConnected: Boolean) {
-        if(isConnected) {
-            //lottieanim.cancelAnimation()
-            //lottieanim.visibility = View.GONE
+        if (isConnected) {
             loadWebView()
-        } else {
-
         }
     }
 }
