@@ -246,7 +246,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         return realm.where(BookmarkModel::class.java).findAll()
     }
 
-    fun loadWebView() {
+    private fun loadWebView() {
         webView?.settings?.javaScriptEnabled = true //enables javascript in our browser
         webView?.settings?.useWideViewPort = true //web page completely zoomed down
         webView?.settings?.setAppCacheMaxSize(8 * 1024 * 1024) // 8 MB for cache
@@ -296,22 +296,22 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         browserWork(bundle)
     }
 
-    fun browserWork(bundle: Bundle?) {
+    private fun browserWork(bundle: Bundle?) {
 
-        val MyActivity = this
+        val myActivity = this
         webView?.setWebChromeClient(object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, progress: Int) {
                 //Make the bar disappear after URL is loaded, and changes string to Loading...
-                MyActivity.title = "Surfing..."
-                MyActivity.setProgress(progress * 100) //Make the bar disappear after URL is loaded
+                myActivity.title = "Surfing..."
+                myActivity.setProgress(progress * 100) //Make the bar disappear after URL is loaded
 
                 // Return the app name after finish loading
                 if (progress == 100) {
-                    MyActivity.setTitle(R.string.app_name)
+                    myActivity.setTitle(R.string.app_name)
                 }
 
                 // get current url as the web page loads  and set the url in the edit text
-                currentUrl = webView?.getUrl()
+                currentUrl = webView?.url
                 search.setText(currentUrl)
             }
         })
@@ -320,7 +320,7 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
             //will load google search page as the default page
             try {
                 webView?.loadUrl("https://www.google.com")
-                currentUrl = webView?.getUrl()
+                currentUrl = webView?.url
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -337,13 +337,13 @@ class BrowserWebView() : AppCompatActivity(), ConnectivityReceiver.ConnectivityR
         }
     }
 
-    fun showAnim() {
+    private fun showAnim() {
         lottieanim.visibility = View.VISIBLE
         lottieanim.playAnimation()
         // Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_LONG).show()
     }
 
-    fun closeAnim() {
+    private fun closeAnim() {
         lottieanim.cancelAnimation()
         lottieanim.visibility = View.GONE
     }

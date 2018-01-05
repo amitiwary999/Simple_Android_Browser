@@ -41,15 +41,11 @@ class Home : Fragment(), HomeAdapter.onItemClicked {
         val display = wm.defaultDisplay
         val metrics = DisplayMetrics()
         display.getMetrics(metrics)
-        var size : Int = metrics.widthPixels/3
         Log.d("size", "size"+metrics.heightPixels/3)
-        recyclerview = view?.findViewById(R.id.grdlist) as RecyclerView
-        val imagBitmap = arrayOfNulls<Bitmap>(HomrAdapterData::imgArr.get(HomrAdapterData()).size)
+        recyclerview = view.findViewById(R.id.grdlist) as RecyclerView
         val imgInt = arrayOfNulls<Int>(HomrAdapterData::imgArr.get(HomrAdapterData()).size)
         val txtTitle = arrayOfNulls<String>(HomrAdapterData::imgArr.get(HomrAdapterData()).size)
         for(i in 0..HomrAdapterData::imgArr.get(HomrAdapterData()).size-1) {
-            //imagBitmap[i] = BitmapFactory.decodeResource(context.resources, HomrAdapterData::imgArr.get(HomrAdapterData())[i])
-            //imagBitmap[i] = Bitmap.createScaledBitmap(imagBitmap[i], size, size, true)
             txtTitle[i] = HomrAdapterData::titleArr.get(HomrAdapterData())[i]
             imgInt[i] = HomrAdapterData::imgArr.get(HomrAdapterData())[i]
             data.add(HomeModel(HomrAdapterData::imgArr.get(HomrAdapterData())[i], HomrAdapterData::linkArr.get(HomrAdapterData())[i], txtTitle[i].toString()))
