@@ -58,7 +58,7 @@ class News : Fragment(), NetworkCall.getData, NewsAdapter.onItemClicked {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater?.inflate(R.layout.news_fragment, container, false)
         recyclerview = view?.findViewById(R.id.grdlist) as RecyclerView
-        swipeToRefresh = view?.findViewById(R.id.swipeToRefresh) as SwipeRefreshLayout
+        swipeToRefresh = view.findViewById(R.id.swipeToRefresh) as SwipeRefreshLayout
         Log.d("connected", "connect"+ isConnected())
         if (flag || !isConnected()) {
             Log.d("amit", "flag" + flag)

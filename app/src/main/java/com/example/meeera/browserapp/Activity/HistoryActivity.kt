@@ -19,7 +19,8 @@ import kotlin.properties.Delegates
 class HistoryActivity : AppCompatActivity(), HistoryAdapter.onItemClicked {
     override fun onItemClick(position: String?) {
             val intent = Intent(this, BrowserWebView::class.java)
-            intent.putExtra("link", position.toString())
+            var link = position.toString()
+            intent.putExtra("link", link)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             finish()
